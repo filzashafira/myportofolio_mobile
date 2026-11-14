@@ -1,12 +1,15 @@
 
 import 'package:flutter/material.dart';
 
+/// Widget halaman utama MyPortfolio yang menampilkan informasi pengguna
+/// serta menu aksi untuk mengakses fitur proyek, education, dan logout.
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
   final String npm = "2506623641";
   final String nama = "Filza Shafira";
   final String kelas = "PBP C";
 
+  // Menyimpan informasi identitas pengguna yang ditampilkan pada halaman utama.
   final List<ItemHomepage> items = [
     ItemHomepage("Lihat Proyek", Icons.folder, Colors.blue),
     ItemHomepage("Tambah Proyek", Icons.add_circle, Colors.green),
@@ -15,6 +18,8 @@ class MyHomePage extends StatelessWidget {
     ItemHomepage("Logout", Icons.logout, Colors.red),
   ];
 
+  /// Membangun tampilan halaman utama yang terdiri dari AppBar,
+  /// kartu informasi pengguna, pesan sambutan, dan kartu menu.
   @override
   Widget build(BuildContext context) {
     // Scaffold menyediakan struktur visual dasar halaman (AppBar, Body, SnackBar).
@@ -73,11 +78,14 @@ class MyHomePage extends StatelessWidget {
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                       crossAxisCount: 2,
+                      // Menyesuaikan rasio ukuran kartu berdasarkan lebar layar.
                       childAspectRatio:
                           MediaQuery.of(context).size.width > 600
                               ? 2.8
                               : 1.2,
+                      // Mengatur tinggi GridView agar mengikuti ukuran isinya.
                       shrinkWrap: true,
+                      // Mengambil empat menu pertama untuk ditampilkan dalam grid.
                       children: items.take(4).map((ItemHomepage item) {
                         return ItemCard(item);
                       }).toList(),
@@ -102,13 +110,18 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+/// Widget untuk menampilkan informasi pengguna dalam bentuk kartu.
+/// Setiap kartu memiliki judul dan isi informasi.
 class InfoCard extends StatelessWidget {
   // Kartu informasi yang menampilkan judul (title) dan isi (content).
   final String title;
   final String content;
 
+  /// Constructor InfoCard yang mewajibkan nilai title dan content
+  /// agar setiap kartu memiliki informasi yang lengkap.
   const InfoCard({super.key, required this.title, required this.content});
 
+ /// Membangun tampilan kartu informasi dengan judul dan isi secara vertikal.
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -134,19 +147,27 @@ class InfoCard extends StatelessWidget {
   }
 }
 
+/// Model data untuk setiap menu pada halaman utama.
+/// Menyimpan nama menu, ikon, dan warna yang digunakan oleh ItemCard.
 class ItemHomepage {
   final String name;
   final IconData icon;
   final Color color;
 
+  /// Constructor untuk menginisialisasi data setiap item menu.
   ItemHomepage(this.name, this.icon, this.color);
 }
 
+/// Widget kartu menu yang dapat ditekan oleh pengguna.
+/// Kartu menampilkan ikon dan nama menu dengan warna sesuai data ItemHomepage.
 class ItemCard extends StatelessWidget {
+  // Menyimpan data menu yang akan ditampilkan pada kartu.
   final ItemHomepage item;
 
+  /// Constructor ItemCard untuk menerima data menu yang akan ditampilkan.
   const ItemCard(this.item, {super.key});
 
+  /// Membangun kartu menu beserta interaksi ketika kartu ditekan.
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -157,7 +178,9 @@ class ItemCard extends StatelessWidget {
         onTap: () {
           // Menampilkan SnackBar dengan pesan interaktif.
           ScaffoldMessenger.of(context)
+            // Menutup SnackBar sebelumnya agar tidak menumpuk.
             ..hideCurrentSnackBar()
+            // Menampilkan pesan sesuai nama menu yang ditekan.
             ..showSnackBar(
               SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!")),
             );
@@ -168,12 +191,14 @@ class ItemCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Menampilkan ikon sesuai data menu dengan warna putih.
                 Icon(
                   item.icon,
                   color: Colors.white,
                   size: 30.0,
                 ),
                 const Padding(padding: EdgeInsets.all(3)),
+                // Menampilkan nama menu di bawah ikon.
                 Text(
                   item.name,
                   textAlign: TextAlign.center,
