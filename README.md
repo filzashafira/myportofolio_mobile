@@ -274,8 +274,14 @@ samples, guidance on mobile development, and a full API reference.
 
    Jadi, ketiganya punya kegunaan masing-masing. Hot reload cocok untuk perubahan yang bisa langsung diterapkan tanpa mengulang aplikasi, hot restart digunakan ketika aplikasi perlu dijalankan ulang dari awal, sedangkan full restart diperlukan untuk perubahan yang membutuhkan proses menjalankan ulang aplikasi secara penuh.
 
-### Penggunaan AI
-Dalam pengerjaan Individual Assignment 7, saya menggunakan Google Gemini untuk membantu memahami instruksi tugas, mempelajari konsep Flutter, serta mengeksplorasi penyesuaian implementasi pada proyek, seperti perubahan warna tombol dan penambahan menu Education. Saya juga memanfaatkan Gemini untuk memahami widget tree, StatelessWidget, StatefulWidget, BuildContext, hot reload, dan hot restart melalui analogi sederhana. Setiap saran yang diberikan saya pelajari kembali dan sesuaikan dengan kebutuhan serta struktur kode proyek saya sendiri.
+### Penggunaan AI (AI Disclosure)
+Dalam pengerjaan Individual Assignment 7, saya menggunakan Google Gemini sebagai alat bantu untuk memahami instruksi tugas, mengevaluasi implementasi kode, dan mempelajari konsep dasar Flutter. Saya memberikan instruksi tugas secara lengkap, kemudian mengajukan pertanyaan secara bertahap berdasarkan bagian yang belum saya pahami.
+
+Secara khusus, Gemini membantu saya memahami perbedaan pewarnaan tombol antara Tutorial 08 dan Individual Assignment 7, penggunaan atribut `Color color` pada model `ItemHomepage`, serta penyesuaian tampilan ketika terjadi bottom overflow. Gemini juga membantu saya mengeksplorasi penambahan menu Education, memahami fungsi `childAspectRatio`, dan mempelajari konsep widget tree, `MaterialApp`, `StatelessWidget`, `StatefulWidget`, `BuildContext`, hot reload, serta hot restart melalui analogi kehidupan sehari-hari. Selain itu, Gemini digunakan sebagai sarana untuk memahami maksud setiap pertanyaan reflektif dan hubungannya dengan implementasi kode.
+
+Meskipun membantu proses pembelajaran, hasil dari AI tidak selalu dapat langsung diterapkan. Beberapa saran masih menggunakan contoh nama variabel, data profil, atau konfigurasi kode yang berbeda dari proyek saya. Penjelasan teknis yang diberikan juga perlu diperiksa kembali karena AI dapat memberikan rekomendasi yang kurang sesuai dengan kondisi implementasi sebenarnya. Oleh karena itu, saya tidak menggunakan seluruh saran secara langsung, melainkan membandingkannya dengan instruksi resmi tugas, materi Tutorial 08, dan struktur kode proyek yang sedang dikerjakan.
+
+Sebagai bentuk verifikasi dan perbaikan manual, saya menyesuaikan setiap perubahan dengan struktur `main.dart` dan `menu.dart` yang sudah ada, menentukan sendiri nama serta warna setiap menu, mengatur tampilan agar tidak mengalami overflow, dan memeriksa hasil implementasi melalui pengujian aplikasi. Saya juga menjalankan `flutter analyze` untuk memastikan tidak terdapat masalah pada kode serta menambahkan komentar dokumentatif pada class, constructor, dan method agar kode lebih mudah dipahami dan dipelihara. Dengan demikian, Google Gemini digunakan sebagai pendamping pembelajaran dan pemberi masukan, sedangkan keputusan implementasi, penyesuaian, dan pemeriksaan akhir tetap saya lakukan sendiri.
 
 Bukti percakapan: https://gemini.google.com/share/d/14gCY-GqjEsaBRo7x9A66Zoo2x_ockmGa?usp=sharing
 
