@@ -1,10 +1,13 @@
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:myportofolio_mobile/widgets/left_drawer.dart';
+import 'package:myportofolio_mobile/widgets/project_card.dart';
 
 /// Widget halaman utama MyPortfolio yang menampilkan informasi pengguna
 /// serta menu aksi untuk mengakses fitur proyek, education, dan logout.
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
+
   final String npm = "2506623641";
   final String nama = "Filza Shafira";
   final String kelas = "PBP C";
@@ -22,7 +25,7 @@ class MyHomePage extends StatelessWidget {
   /// kartu informasi pengguna, pesan sambutan, dan kartu menu.
   @override
   Widget build(BuildContext context) {
-    // Scaffold menyediakan struktur visual dasar halaman (AppBar, Body, SnackBar).
+    // Scaffold menyediakan struktur visual dasar halaman aplikasi.
     return Scaffold(
       // AppBar menampilkan bar bagian atas halaman aplikasi.
       appBar: AppBar(
@@ -34,7 +37,13 @@ class MyHomePage extends StatelessWidget {
           ),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
+
+        // Mengatur warna ikon AppBar, termasuk ikon hamburger Drawer.
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
+
+      // Menambahkan Drawer Menu untuk navigasi antarhalaman.
+      drawer: const LeftDrawer(),
 
       // Body halaman utama dengan padding di sekelilingnya.
       body: SingleChildScrollView(
@@ -78,13 +87,14 @@ class MyHomePage extends StatelessWidget {
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                       crossAxisCount: 2,
+
                       // Menyesuaikan rasio ukuran kartu berdasarkan lebar layar.
                       childAspectRatio:
-                          MediaQuery.of(context).size.width > 600
-                              ? 2.8
-                              : 1.2,
+                          MediaQuery.of(context).size.width > 600 ? 2.8 : 1.2,
+
                       // Mengatur tinggi GridView agar mengikuti ukuran isinya.
                       shrinkWrap: true,
+
                       // Mengambil empat menu pertama untuk ditampilkan dalam grid.
                       children: items.take(4).map((ItemHomepage item) {
                         return ItemCard(item);
@@ -121,7 +131,7 @@ class InfoCard extends StatelessWidget {
   /// agar setiap kartu memiliki informasi yang lengkap.
   const InfoCard({super.key, required this.title, required this.content});
 
- /// Membangun tampilan kartu informasi dengan judul dan isi secara vertikal.
+  /// Membangun tampilan informasi pengguna dengan judul dan isi secara vertikal.
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -131,6 +141,7 @@ class InfoCard extends StatelessWidget {
         // Menyesuaikan lebar kartu dengan proporsi layar (dibagi 3.5).
         width: MediaQuery.of(context).size.width / 3.5,
         padding: const EdgeInsets.all(16.0),
+
         // Menyusun teks title dan content secara vertikal.
         child: Column(
           children: [
@@ -156,59 +167,4 @@ class ItemHomepage {
 
   /// Constructor untuk menginisialisasi data setiap item menu.
   ItemHomepage(this.name, this.icon, this.color);
-}
-
-/// Widget kartu menu yang dapat ditekan oleh pengguna.
-/// Kartu menampilkan ikon dan nama menu dengan warna sesuai data ItemHomepage.
-class ItemCard extends StatelessWidget {
-  // Menyimpan data menu yang akan ditampilkan pada kartu.
-  final ItemHomepage item;
-
-  /// Constructor ItemCard untuk menerima data menu yang akan ditampilkan.
-  const ItemCard(this.item, {super.key});
-
-  /// Membangun kartu menu beserta interaksi ketika kartu ditekan.
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: item.color,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        // Aksi ketika kartu ditekan oleh pengguna.
-        onTap: () {
-          // Menampilkan SnackBar dengan pesan interaktif.
-          ScaffoldMessenger.of(context)
-            // Menutup SnackBar sebelumnya agar tidak menumpuk.
-            ..hideCurrentSnackBar()
-            // Menampilkan pesan sesuai nama menu yang ditekan.
-            ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!")),
-            );
-        },
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Menampilkan ikon sesuai data menu dengan warna putih.
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                // Menampilkan nama menu di bawah ikon.
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

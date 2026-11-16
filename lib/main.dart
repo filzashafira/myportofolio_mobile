@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:myportofolio_mobile/menu.dart';
+
+import 'package:material_ui/material_ui.dart';
+import 'package:myportofolio_mobile/screens/menu.dart';
 
 /// Fungsi utama yang menjadi titik awal eksekusi aplikasi Flutter.
 void main() {
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // Menentukan judul aplikasi.
       title: 'MyPortfolio',
+
       // Mengatur tema warna dan penggunaan Material Design 3.
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -25,6 +27,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
+
       // Menentukan MyHomePage dari menu.dart sebagai halaman pertama aplikasi.
       home: MyHomePage(),
     );
