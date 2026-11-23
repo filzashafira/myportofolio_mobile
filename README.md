@@ -285,3 +285,16 @@ Sebagai bentuk verifikasi dan perbaikan manual, saya menyesuaikan setiap perubah
 
 Bukti percakapan: https://gemini.google.com/share/d/14gCY-GqjEsaBRo7x9A66Zoo2x_ockmGa?usp=sharing
 
+### Tugas 8
+
+1. `Navigator.push()` menambahkan halaman baru di atas halaman saat ini pada stack, sehingga halaman sebelumnya tetap dapat dibuka kembali dengan tombol Back atau `Navigator.pop()`. `Navigator.pushReplacement()` mengganti halaman teratas dengan halaman baru, sedangkan `Navigator.pop()` menutup halaman teratas dan kembali ke halaman di bawahnya. Pada aplikasi ini, kartu **Tambah Education** membuka form memakai `Navigator.push()`. Opsi **Home** pada drawer memakai `Navigator.pushReplacement()` untuk menampilkan kembali halaman utama.
+
+2. `Scaffold` menyediakan kerangka halaman, termasuk `AppBar`, `Drawer`, dan `body`. Pemakaian struktur ini pada halaman utama dan form membuat navigasi serta susunan halaman terasa konsisten. Contohnya, `AppBar` menggunakan warna indigo pada halaman utama dan halaman form Education, selaras dengan tema portofolio.
+
+3. Form menggunakan `Column` untuk menyusun input dari atas ke bawah dan `Padding` untuk memberi jarak di sekeliling setiap kolom. `SingleChildScrollView` membolehkan seluruh isi form digulir ketika ruang layar sempit atau keyboard tampil, sehingga tombol Simpan tetap dapat dijangkau.
+
+4. `GlobalKey<FormState>` menyediakan akses ke kondisi form. Setiap `validator` memeriksa input terkait dan mengembalikan pesan kesalahan jika nilainya tidak valid. Saat tombol Simpan ditekan, `validate()` menjalankan semua validator; dialog ringkasan hanya ditampilkan jika semuanya lolos. Contohnya, nama institusi yang hanya berisi spasi ditolak karena setelah `trim()` nilainya kosong. Memilih jenis input atau keyboard hanya membantu cara pengguna memasukkan data, tetapi tidak memastikan isi input memenuhi aturan, sehingga validator tetap diperlukan.
+
+### Penggunaan AI (AI Disclosure) — Tugas 8
+
+Dalam pengerjaan Tugas 8, saya menggunakan ChatGPT/Codex sebagai pendamping untuk mencocokkan instruksi tugas dengan Tutorial 09 dan struktur kode proyek. Bantuan AI digunakan untuk menyusun halaman `EducationFormPage`, validasi tiga input, dialog ringkasan, serta navigasi dari kartu dan drawer.
