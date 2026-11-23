@@ -1,24 +1,34 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 
-/// Halaman form untuk menambahkan informasi pendidikan.
+/// Halaman form untuk memasukkan dan meninjau informasi pendidikan.
+///
+/// Form ini meminta nama institusi, jenjang, dan program studi. Data hanya
+/// ditampilkan pada dialog setelah seluruh kolom wajib lolos validasi.
 class EducationFormPage extends StatefulWidget {
   const EducationFormPage({super.key});
 
+  /// Membuat state yang menyimpan nilai input selama halaman dibuka.
   @override
   State<EducationFormPage> createState() => _EducationFormPageState();
 }
 
+/// Mengelola nilai input dan validasi pada [EducationFormPage].
 class _EducationFormPageState extends State<EducationFormPage> {
-  // GlobalKey digunakan untuk mengakses FormState dan menjalankan validasi.
+  // Key ini menghubungkan state halaman dengan Form di bawahnya, sehingga
+  // tombol Simpan dapat meminta semua field menjalankan validator.
   final _formKey = GlobalKey<FormState>();
 
-  // Menyimpan data pendidikan yang dimasukkan pengguna.
+  // Nilai-nilai ini diperbarui saat pengguna mengetik dan dipakai untuk
+  // menyusun ringkasan pada dialog setelah validasi berhasil.
   String _institution = "";
   String _degree = "";
   String _major = "";
 
-  /// Menampilkan ringkasan setelah semua input berhasil divalidasi.
+  /// Memvalidasi semua kolom, lalu menampilkan ringkasan jika semuanya valid.
+  ///
+  /// Jika ada nilai kosong atau hanya berisi spasi, [FormState.validate]
+  /// mengembalikan `false` dan validator menampilkan pesan pada kolomnya.
   void _showEducationDialog() {
     if (_formKey.currentState!.validate()) {
       showDialog(
@@ -40,6 +50,7 @@ class _EducationFormPageState extends State<EducationFormPage> {
               TextButton(
                 child: const Text('OK'),
                 onPressed: () {
+                  // Menutup dialog saja agar pengguna kembali ke form.
                   Navigator.pop(context);
                 },
               ),
@@ -50,6 +61,7 @@ class _EducationFormPageState extends State<EducationFormPage> {
     }
   }
 
+  /// Menyusun kerangka halaman dan input pendidikan yang bisa digulir.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,14 +72,18 @@ class _EducationFormPageState extends State<EducationFormPage> {
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
       ),
+      // Drawer bersama memungkinkan pengguna berpindah ke Home atau form lain.
       drawer: const LeftDrawer(),
       body: Form(
+        // Form memakai key ini untuk menjalankan validator saat Simpan ditekan.
         key: _formKey,
         child: SingleChildScrollView(
+          // Gulir halaman menjaga tombol Simpan tetap dapat dijangkau pada
+          // layar pendek maupun ketika keyboard mengurangi ruang yang tersedia.
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Input nama institusi pendidikan.
+              // Nama institusi adalah kolom wajib; trim() juga menolak spasi.
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -80,6 +96,7 @@ class _EducationFormPageState extends State<EducationFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
+                      // setState membangun ulang halaman dengan nilai terbaru.
                       _institution = value!;
                     });
                   },
@@ -92,7 +109,7 @@ class _EducationFormPageState extends State<EducationFormPage> {
                 ),
               ),
 
-              // Input jenjang pendidikan.
+              // Jenjang pendidikan, misalnya D3, S1, atau S2, wajib diisi.
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -117,7 +134,7 @@ class _EducationFormPageState extends State<EducationFormPage> {
                 ),
               ),
 
-              // Input program studi.
+              // Program studi, misalnya Ilmu Komputer, wajib diisi.
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -142,7 +159,7 @@ class _EducationFormPageState extends State<EducationFormPage> {
                 ),
               ),
 
-              // Tombol untuk memvalidasi form dan menampilkan ringkasan.
+              // Pemanggilan handler memvalidasi form sebelum dialog dibuka.
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(

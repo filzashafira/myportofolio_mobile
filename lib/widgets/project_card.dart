@@ -43,7 +43,8 @@ class ItemCard extends StatelessWidget {
             );
           }
 
-          // Membuka halaman form ketika tombol Tambah Education ditekan.
+          // push menaruh form Education di atas halaman utama pada stack.
+          // Karena halaman utama tetap tersimpan, tombol Back dapat kembali.
           if (item.name == "Tambah Education") {
             Navigator.push(
               context,

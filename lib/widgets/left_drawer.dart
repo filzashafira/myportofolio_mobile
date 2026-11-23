@@ -81,12 +81,14 @@ class LeftDrawer extends StatelessWidget {
             },
           ),
 
-          // Menu navigasi untuk membuka halaman tambah Education.
+          // Menu ini membuka form Education dari drawer yang sama dengan Home
+          // dan Add Project, sehingga navigasi konsisten di setiap halaman.
           ListTile(
             leading: const Icon(Icons.school_outlined),
             title: const Text('Add Education'),
 
-            // Membuka EducationFormPage melalui Navigator.push().
+            // push mempertahankan halaman saat ini di stack agar pengguna
+            // dapat kembali dengan Back setelah membuka form Education.
             onTap: () {
               Navigator.push(
                 context,
