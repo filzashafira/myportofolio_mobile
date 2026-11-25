@@ -1,8 +1,12 @@
-
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/screens/education_form.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
-import 'package:myportofolio_mobile/screens/project_form.dart';
+import 'package:myportofolio_mobile/screens/project_form_screen.dart';
+import 'package:myportofolio_mobile/screens/login_screen.dart';
+import 'package:myportofolio_mobile/screens/project_list_screen.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
+import 'package:myportofolio_mobile/widgets/auth_guard.dart';
+import 'package:provider/provider.dart';
 
 /// Widget Drawer yang menyediakan navigasi ke halaman utama
 /// dan halaman untuk menambahkan proyek baru.
@@ -12,6 +16,7 @@ class LeftDrawer extends StatelessWidget {
   /// Membangun tampilan Drawer Menu pada sisi kiri aplikasi.
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = context.watch<AuthState>().isLoggedIn;
     return Drawer(
       // ListView menyusun isi Drawer secara vertikal
       // dan memungkinkan konten di-scroll jika diperlukan.
@@ -19,9 +24,7 @@ class LeftDrawer extends StatelessWidget {
         children: [
           // Header Drawer berisi judul dan deskripsi aplikasi.
           const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.indigo,
-            ),
+            decoration: BoxDecoration(color: Colors.indigo),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -40,10 +43,7 @@ class LeftDrawer extends StatelessWidget {
                 // Menampilkan deskripsi singkat aplikasi.
                 Text(
                   'Explore personal projects and experiences!',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 15, color: Colors.white),
                 ),
               ],
             ),
@@ -58,27 +58,37 @@ class LeftDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => MyHomePage(),
-                ),
+                MaterialPageRoute(builder: (context) => MyHomePage()),
               );
             },
           ),
 
-          // Menu navigasi untuk membuka halaman tambah proyek.
+          // Menu navigasi untuk membuka halaman tambah achievement/proyek.
           ListTile(
             leading: const Icon(Icons.add_circle_outline),
             title: const Text('Add Project'),
 
-            // Membuka halaman ProjectFormPage melalui Navigator.push().
-            onTap: () {
+            // Drawer ditutup terlebih dahulu. Jika belum login, pengguna
+            // diarahkan ke halaman Login sebelum membuka form.
+            onTap: () async {
+              Navigator.pop(context);
+              if (!await ensureLoggedIn(context) || !context.mounted) return;
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const ProjectFormPage(),
-                ),
+                MaterialPageRoute(builder: (_) => const ProjectFormScreen()),
               );
             },
+          ),
+
+          ListTile(
+            leading: const Icon(Icons.folder_open),
+            title: const Text('View Projects'),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => const ProjectListScreen(),
+              ),
+            ),
           ),
 
           // Menu ini membuka form Education dari drawer yang sama dengan Home
@@ -98,6 +108,31 @@ class LeftDrawer extends StatelessWidget {
               );
             },
           ),
+          if (!isLoggedIn)
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text('Login'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
+                );
+              },
+            )
+          else
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () async {
+                Navigator.pop(context);
+                await context.read<AuthState>().logout();
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Successfully logged out.')),
+                );
+              },
+            ),
         ],
       ),
     );

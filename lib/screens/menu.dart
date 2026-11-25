@@ -1,4 +1,3 @@
-
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/widgets/left_drawer.dart';
 import 'package:myportofolio_mobile/widgets/project_card.dart';
@@ -15,7 +14,7 @@ class MyHomePage extends StatelessWidget {
   // Menyimpan informasi identitas pengguna yang ditampilkan pada halaman utama.
   final List<ItemHomepage> items = [
     ItemHomepage("Lihat Proyek", Icons.folder, Colors.blue),
-    ItemHomepage("Tambah Proyek", Icons.add_circle, Colors.green),
+    ItemHomepage("Add Project", Icons.add_circle, Colors.green),
     ItemHomepage("Lihat Education", Icons.school, Colors.purple),
     ItemHomepage("Tambah Education", Icons.library_add, Colors.orange),
     ItemHomepage("Logout", Icons.logout, Colors.red),
@@ -31,10 +30,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'MyPortfolio',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
 
@@ -89,8 +85,9 @@ class MyHomePage extends StatelessWidget {
                       crossAxisCount: 2,
 
                       // Menyesuaikan rasio ukuran kartu berdasarkan lebar layar.
-                      childAspectRatio:
-                          MediaQuery.of(context).size.width > 600 ? 2.8 : 1.2,
+                      childAspectRatio: MediaQuery.of(context).size.width > 600
+                          ? 2.8
+                          : 1.2,
 
                       // Mengatur tinggi GridView agar mengikuti ukuran isinya.
                       shrinkWrap: true,
@@ -104,11 +101,7 @@ class MyHomePage extends StatelessWidget {
                     const SizedBox(height: 10),
 
                     // Tombol Logout ditampilkan terpisah di bagian bawah.
-                    SizedBox(
-                      width: 150,
-                      height: 90,
-                      child: ItemCard(items[4]),
-                    ),
+                    SizedBox(width: 150, height: 90, child: ItemCard(items[4])),
                   ],
                 ),
               ),
@@ -145,10 +138,7 @@ class InfoCard extends StatelessWidget {
         // Menyusun teks title dan content secara vertikal.
         child: Column(
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8.0),
             Text(content),
           ],

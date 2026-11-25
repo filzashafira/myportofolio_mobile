@@ -1,35 +1,37 @@
-
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
+import 'package:myportofolio_mobile/services/api_client.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
+import 'package:provider/provider.dart';
 
 /// Fungsi utama yang menjadi titik awal eksekusi aplikasi Flutter.
 void main() {
   // Menjalankan MyApp sebagai root widget aplikasi.
-  runApp(const MyApp());
+  runApp(MyApp(apiClient: ApiClient()));
 }
 
 /// Widget utama yang mengatur konfigurasi dasar aplikasi MyPortfolio.
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({required this.apiClient, super.key});
 
-  /// Membangun konfigurasi aplikasi, termasuk tema dan halaman awal.
+  final ApiClient apiClient;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // Menentukan judul aplikasi.
-      title: 'MyPortfolio',
-
-      // Mengatur tema warna dan penggunaan Material Design 3.
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigo,
-          secondary: Colors.amber[700],
+    return MultiProvider(
+      providers: [
+        Provider.value(value: apiClient),
+        ChangeNotifierProvider(create: (_) => AuthState(apiClient)),
+      ],
+      child: MaterialApp(
+        title: 'MyPortfolio',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+          useMaterial3: true,
         ),
-        useMaterial3: true,
+        // Di proyek ini halaman utama bernama MyHomePage di menu.dart.
+        home: MyHomePage(),
       ),
-
-      // Menentukan MyHomePage dari menu.dart sebagai halaman pertama aplikasi.
-      home: MyHomePage(),
     );
   }
 }

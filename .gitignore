@@ -32,6 +32,8 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+*.g.dart
+# Generated json_serializable files
 
 # Symbolication related
 app.*.symbols

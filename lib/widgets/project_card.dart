@@ -1,8 +1,11 @@
-
 import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/screens/education_form.dart';
 import 'package:myportofolio_mobile/screens/menu.dart';
-import 'package:myportofolio_mobile/screens/project_form.dart';
+import 'package:myportofolio_mobile/screens/project_form_screen.dart';
+import 'package:myportofolio_mobile/screens/project_list_screen.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
+import 'package:myportofolio_mobile/widgets/auth_guard.dart';
+import 'package:provider/provider.dart';
 
 /// Widget kartu menu yang dapat ditekan oleh pengguna.
 /// Kartu menampilkan ikon dan nama menu dengan warna sesuai data ItemHomepage.
@@ -21,7 +24,7 @@ class ItemCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         // Aksi ketika kartu ditekan oleh pengguna.
-        onTap: () {
+        onTap: () async {
           // Menampilkan SnackBar dengan pesan interaktif.
           ScaffoldMessenger.of(context)
             // Menutup SnackBar sebelumnya agar tidak menumpuk.
@@ -33,13 +36,13 @@ class ItemCard extends StatelessWidget {
               ),
             );
 
-          // Membuka halaman form ketika tombol Tambah Proyek ditekan.
-          if (item.name == "Tambah Proyek") {
+          // Membuka halaman form ketika tombol Add Project ditekan.
+          if (item.name == "Add Project") {
+            if (!await ensureLoggedIn(context)) return;
+            if (!context.mounted) return;
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => const ProjectFormPage(),
-              ),
+              MaterialPageRoute(builder: (_) => const ProjectFormScreen()),
             );
           }
 
@@ -53,6 +56,29 @@ class ItemCard extends StatelessWidget {
               ),
             );
           }
+
+          if (item.name == 'Lihat Proyek') {
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => const ProjectListScreen(),
+              ),
+            );
+          }
+
+          if (item.name == 'Logout') {
+            if (!context.read<AuthState>().isLoggedIn) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('You are not logged in.')),
+              );
+              return;
+            }
+            await context.read<AuthState>().logout();
+            if (!context.mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Successfully logged out.')),
+            );
+          }
         },
         child: Container(
           padding: const EdgeInsets.all(8),
@@ -61,11 +87,7 @@ class ItemCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Menampilkan ikon sesuai data menu dengan warna putih.
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
+                Icon(item.icon, color: Colors.white, size: 30.0),
                 const Padding(padding: EdgeInsets.all(3)),
 
                 // Menampilkan nama menu di bawah ikon.

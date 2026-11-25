@@ -285,16 +285,232 @@ Sebagai bentuk verifikasi dan perbaikan manual, saya menyesuaikan setiap perubah
 
 Bukti percakapan: https://gemini.google.com/share/d/14gCY-GqjEsaBRo7x9A66Zoo2x_ockmGa?usp=sharing
 
+
 ### Tugas 8
 
-1. `Navigator.push()` menambahkan halaman baru di atas halaman saat ini pada stack, sehingga halaman sebelumnya tetap dapat dibuka kembali dengan tombol Back atau `Navigator.pop()`. `Navigator.pushReplacement()` mengganti halaman teratas dengan halaman baru, sedangkan `Navigator.pop()` menutup halaman teratas dan kembali ke halaman di bawahnya. Pada aplikasi ini, kartu **Tambah Education** membuka form memakai `Navigator.push()`. Opsi **Home** pada drawer memakai `Navigator.pushReplacement()` untuk menampilkan kembali halaman utama.
+1. Perbedaan Navigator.push(), Navigator.pushReplacement(), dan Navigator.pop()
+Dalam Flutter, navigasi digunakan untuk berpindah dari satu halaman ke halaman lainnya. Flutter menggunakan widget `Navigator` untuk mengatur perpindahan antarrute (route). Navigator bekerja dengan konsep stack atau tumpukan halaman, yaitu halaman yang terakhir dibuka akan berada di posisi paling atas dan ditampilkan kepada pengguna.
 
-2. `Scaffold` menyediakan kerangka halaman, termasuk `AppBar`, `Drawer`, dan `body`. Pemakaian struktur ini pada halaman utama dan form membuat navigasi serta susunan halaman terasa konsisten. Contohnya, `AppBar` menggunakan warna indigo pada halaman utama dan halaman form Education, selaras dengan tema portofolio.
+Pada tugas ini, saya menggunakan tiga method Navigator, yaitu `push()`, `pushReplacement()`, dan `pop()`. Ketiganya memiliki fungsi yang berbeda sesuai dengan kebutuhan navigasi aplikasi.
 
-3. Form menggunakan `Column` untuk menyusun input dari atas ke bawah dan `Padding` untuk memberi jarak di sekeliling setiap kolom. `SingleChildScrollView` membolehkan seluruh isi form digulir ketika ruang layar sempit atau keyboard tampil, sehingga tombol Simpan tetap dapat dijangkau.
+`Navigator.push()` digunakan untuk membuka halaman baru dengan menambahkannya ke atas stack navigasi. Halaman sebelumnya tetap tersimpan sehingga pengguna bisa kembali menggunakan tombol Back bawaan perangkat. Pada aplikasi My Portfolio Mobile, method ini digunakan untuk membuka halaman formulir Education melalui pilihan Add Education pada Drawer. Method yang sama juga digunakan pada kartu aksi di halaman utama untuk membuka formulir.
 
-4. `GlobalKey<FormState>` menyediakan akses ke kondisi form. Setiap `validator` memeriksa input terkait dan mengembalikan pesan kesalahan jika nilainya tidak valid. Saat tombol Simpan ditekan, `validate()` menjalankan semua validator; dialog ringkasan hanya ditampilkan jika semuanya lolos. Contohnya, nama institusi yang hanya berisi spasi ditolak karena setelah `trim()` nilainya kosong. Memilih jenis input atau keyboard hanya membantu cara pengguna memasukkan data, tetapi tidak memastikan isi input memenuhi aturan, sehingga validator tetap diperlukan.
+Contoh implementasi pada Drawer:
+```dart
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => const EducationFormPage(),
+  ),
+);
+```
 
-### Penggunaan AI (AI Disclosure) — Tugas 8
+Pada kode tersebut, `MaterialPageRoute` menentukan halaman yang akan dibuka, yaitu `EducationFormPage`. Ketika pengguna menekan Add Education, halaman formulir akan ditampilkan tanpa menghapus halaman sebelumnya dari stack navigasi. Jadi, pengguna masih bisa kembali ke halaman sebelumnya.
 
-Dalam pengerjaan Tugas 8, saya menggunakan ChatGPT/Codex sebagai pendamping untuk mencocokkan instruksi tugas dengan Tutorial 09 dan struktur kode proyek. Bantuan AI digunakan untuk menyusun halaman `EducationFormPage`, validasi tiga input, dialog ringkasan, serta navigasi dari kartu dan drawer.
+Selanjutnya, `Navigator.pushReplacement()` digunakan untuk mengganti halaman yang sedang dibuka dengan halaman baru. Berbeda dengan `push()`, method ini menggantikan route yang sedang aktif sehingga route sebelumnya tidak lagi berada di posisi yang sama dalam stack.
+
+Pada aplikasi ini, `pushReplacement()` digunakan ketika pengguna memilih menu Home pada Drawer.
+Contoh implementasinya:
+```dart
+Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(
+    builder: (context) => MyHomePage(),
+  ),
+);
+```
+
+Ketika pengguna sedang berada di halaman Add Education Form dan memilih Home, halaman tersebut akan digantikan dengan halaman utama (`MyHomePage`). Saya menggunakan method ini agar pengguna bisa langsung kembali ke halaman utama melalui Drawer, termasuk ketika menjalankan aplikasi menggunakan Chrome.
+
+Sementara itu, `Navigator.pop()` digunakan untuk menutup halaman atau route yang sedang berada di posisi paling atas stack navigasi. Pada tugas ini, saya menggunakannya pada tombol OK di dalam `AlertDialog`.
+
+Contoh implementasinya:
+```dart
+TextButton(
+  child: const Text('OK'),
+  onPressed: () {
+    Navigator.pop(context);
+  },
+)
+```
+
+Ketika tombol OK ditekan, dialog ringkasan Education akan ditutup dan pengguna kembali ke halaman formulir.
+
+Jadi, perbedaan ketiganya terletak pada cara mengatur halaman dalam stack. `push()` digunakan untuk membuka halaman baru, `pushReplacement()` digunakan untuk mengganti halaman yang sedang aktif, sedangkan `pop()` digunakan untuk menutup halaman atau dialog yang sedang terbuka. Dalam tugas ini, ketiganya digunakan sesuai kebutuhan navigasi aplikasi.
+
+2. Peran Scaffold, AppBar, dan Drawer dalam Menjaga Konsistensi Struktur Halaman
+Dalam Flutter, `Scaffold` merupakan widget yang digunakan untuk membuat struktur dasar sebuah halaman dengan Material Design. Widget ini menyediakan beberapa bagian utama, seperti AppBar, Drawer, dan body. Pada tugas ini, saya menggunakan Scaffold pada halaman Education Form agar susunan halaman tetap konsisten dengan halaman utama dan halaman Add Project.
+
+Pada halaman `EducationFormPage`, Scaffold menampung AppBar, Drawer, dan Form sebagai bagian dari body.
+
+```dart
+return Scaffold(
+  appBar: AppBar(
+    title: const Center(
+      child: Text('Add Education Form'),
+    ),
+    backgroundColor: Colors.indigo,
+    foregroundColor: Colors.white,
+  ),
+  drawer: const LeftDrawer(),
+  body: Form(
+    key: _formKey,
+    child: SingleChildScrollView(
+      // Isi formulir
+    ),
+  ),
+);
+```
+
+`AppBar` merupakan bagian atas halaman yang digunakan untuk menampilkan judul sekaligus menyediakan akses ke Drawer. Pada halaman Education Form, AppBar menampilkan judul "Add Education Form". Saya menggunakan `Colors.indigo` sebagai warna latar belakang dan `Colors.white` untuk teks serta ikon agar tampilannya sesuai dengan tema aplikasi My Portfolio Mobile.
+
+Kemudian, `Drawer` merupakan menu navigasi yang muncul dari sisi kiri layar. Drawer memudahkan pengguna untuk berpindah halaman tanpa harus selalu menggunakan tombol Back. Pada aplikasi ini, saya membuat Drawer secara terpisah di file `lib/widgets/left_drawer.dart` melalui widget `LeftDrawer`, sehingga komponen yang sama bisa digunakan kembali pada halaman lain.
+
+Di dalam Drawer terdapat tiga pilihan menu, yaitu Home, Add Project, dan Add Education. Menu Home digunakan untuk kembali ke halaman utama menggunakan `Navigator.pushReplacement()`, sedangkan Add Project dan Add Education digunakan untuk membuka halaman formulir masing-masing menggunakan `Navigator.push()`.
+
+Saya juga menggunakan `DrawerHeader` untuk menampilkan identitas aplikasi berupa judul "My Portfolio" dan deskripsi singkat "Explore personal projects and experiences!".
+
+Untuk menjaga konsistensi tampilan, saya menggunakan warna indigo pada beberapa bagian aplikasi, seperti AppBar halaman Education, DrawerHeader, dan tombol Simpan. Warna putih digunakan pada teks AppBar dan DrawerHeader agar mudah dibaca. Dengan penggunaan warna yang sama, halaman utama, Drawer, dan halaman formulir tetap memiliki tampilan yang seragam.
+
+3. Alasan Pemilihan Tata Letak dan Peran Widget Pengatur Jarak serta Penggulir
+Pada halaman Education Form, saya menggunakan beberapa widget layout untuk menyusun komponen formulir agar lebih rapi dan mudah digunakan. Widget yang saya gunakan adalah `SingleChildScrollView`, `Column`, `Padding`, dan `Align`.
+
+`SingleChildScrollView` digunakan agar konten di dalamnya dapat digulir ketika ukuran layar tidak cukup untuk menampilkan seluruh komponen. Saya menggunakan widget ini sebagai pembungkus `Column` di dalam Form.
+
+```dart
+body: Form(
+  key: _formKey,
+  child: SingleChildScrollView(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Input formulir dan tombol Simpan
+      ],
+    ),
+  ),
+),
+```
+
+Saya memilih widget ini karena formulir memiliki beberapa kolom input dan tombol Simpan yang disusun secara vertikal. Ketika aplikasi dibuka pada layar ponsel atau keyboard muncul dan mengurangi ruang tampilan, pengguna masih bisa menggulir halaman untuk menjangkau bagian formulir yang belum terlihat.
+
+Selanjutnya, `Column` digunakan untuk menyusun widget secara vertikal atau dari atas ke bawah. Saya menggunakannya karena ketiga input Education perlu ditampilkan secara berurutan, yaitu Nama Institusi, Jenjang Pendidikan, dan Program Studi. Setelah ketiga input tersebut, terdapat tombol Simpan. Saya juga menggunakan `crossAxisAlignment: CrossAxisAlignment.start` agar komponen di dalam Column memiliki perataan ke sisi kiri.
+
+Kemudian, `Padding` digunakan untuk memberikan jarak di sekitar widget agar komponen tidak saling menempel. Pada setiap `TextFormField`, saya menggunakan `EdgeInsets.all(8.0)` sehingga terdapat jarak sebesar 8 logical pixels pada setiap sisi input.
+
+Contoh penggunaannya:
+```dart
+Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: TextFormField(
+    // Konfigurasi input
+  ),
+)
+```
+
+Saya juga menggunakan `Padding` pada tombol Simpan agar tampilannya tidak terlalu rapat dengan komponen lainnya.
+
+Selain itu, `Align` digunakan untuk mengatur posisi sebuah widget. Pada halaman Education Form, saya menggunakannya untuk menempatkan tombol Simpan di bagian tengah secara horizontal dan bagian bawah pada area penempatannya.
+
+```dart
+Align(
+  alignment: Alignment.bottomCenter,
+  child: Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: ElevatedButton(
+      // Tombol Simpan
+    ),
+  ),
+)
+```
+
+Secara keseluruhan, saya memilih susunan layout tersebut karena formulir memiliki beberapa input yang perlu ditampilkan secara berurutan. `Column` membantu menyusun komponen, `Padding` memberikan jarak, `Align` mengatur posisi tombol, dan `SingleChildScrollView` memungkinkan pengguna menggulir halaman ketika ruang layar terbatas. Dengan begitu, formulir tetap bisa digunakan pada ukuran layar yang berbeda.
+
+4. Peran GlobalKey<FormState>, Validator, dan Validate() dalam Proses Validasi Formulir
+Dalam Flutter, widget `Form` digunakan untuk mengelompokkan beberapa input field agar dapat dikelola dan divalidasi bersama. Pada tugas ini, saya menggunakan Form untuk menampung tiga input pendidikan, yaitu Nama Institusi, Jenjang Pendidikan, dan Program Studi.
+
+Agar seluruh input bisa diperiksa sebelum data ditampilkan, saya menggunakan `GlobalKey<FormState>`, `validator`, dan method `validate()`.
+
+Pertama, `GlobalKey<FormState>` digunakan untuk mengidentifikasi Form dan mengakses state yang dimilikinya. Pada halaman Education Form, saya mendeklarasikan key tersebut sebagai berikut:
+
+```dart
+final _formKey = GlobalKey<FormState>();
+```
+
+Kemudian, key tersebut dihubungkan dengan widget Form melalui properti `key`.
+
+```dart
+Form(
+  key: _formKey,
+  child: SingleChildScrollView(
+    // Isi formulir
+  ),
+)
+```
+
+Dengan menggunakan `_formKey`, saya bisa mengakses FormState dari bagian kode lainnya, terutama ketika tombol Simpan ditekan. Melalui `_formKey.currentState`, saya dapat menjalankan method seperti `validate()` untuk memeriksa seluruh input yang ada di dalam Form.
+
+Selanjutnya, `validator` digunakan untuk memeriksa apakah nilai yang dimasukkan pengguna sudah memenuhi ketentuan. Pada halaman Education, ketiga kolom wajib diisi sehingga masing-masing `TextFormField` memiliki validator.
+
+Contoh validator pada kolom Nama Institusi:
+
+```dart
+validator: (String? value) {
+  if (value == null || value.trim().isEmpty) {
+    return 'Nama institusi tidak boleh kosong!';
+  }
+  return null;
+},
+```
+
+Pada kode tersebut, `value` merupakan nilai yang dimasukkan pengguna. Saya menggunakan `trim().isEmpty` untuk memeriksa apakah input kosong atau hanya berisi spasi. Jika kondisi tersebut terpenuhi, validator akan mengembalikan pesan kesalahan. Sebaliknya, jika input sudah diisi dengan benar, validator mengembalikan `null`, yang berarti input tersebut valid.
+
+Pola validasi yang sama juga diterapkan pada kolom Jenjang Pendidikan dan Program Studi, tetapi dengan pesan kesalahan yang disesuaikan.
+
+Contoh nilai yang ditolak adalah ketika pengguna mengisi kolom Nama Institusi dengan `"     "` atau beberapa karakter spasi saja. Walaupun kolom tersebut terlihat sudah diisi, sebenarnya tidak ada informasi yang diberikan. Karena itu, input seperti ini tetap harus ditolak.
+
+Kemudian, `validate()` merupakan method yang digunakan untuk menjalankan seluruh validator pada field yang terdapat di dalam Form. Pada tugas ini, proses validasi dijalankan ketika pengguna menekan tombol Simpan.
+
+```dart
+void _showEducationDialog() {
+  if (_formKey.currentState!.validate()) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // Ringkasan data
+        );
+      },
+    );
+  }
+}
+```
+
+Ketika tombol Simpan ditekan, fungsi `_showEducationDialog()` akan dipanggil. Selanjutnya, `_formKey.currentState!.validate()` akan memeriksa seluruh input yang memiliki validator.
+
+Jika terdapat input yang tidak valid, method tersebut akan menghasilkan nilai `false`. Akibatnya, dialog ringkasan tidak akan ditampilkan dan pesan kesalahan akan muncul pada kolom yang bermasalah. Namun, jika seluruh input sudah valid, method tersebut akan menghasilkan nilai `true` sehingga aplikasi melanjutkan proses dengan memanggil `showDialog()` untuk menampilkan ringkasan data yang dimasukkan pengguna.
+
+Pemilihan jenis input atau keyboard saja belum cukup untuk memastikan bahwa data yang dimasukkan benar. Jenis input dan keyboard hanya membantu pengguna memasukkan data sesuai kebutuhan, tetapi tidak selalu bisa memeriksa isi data tersebut. Contohnya, meskipun menggunakan `TextFormField` dengan keyboard teks, pengguna masih bisa memasukkan beberapa spasi saja. Karena itu, diperlukan validator untuk memeriksa isi input sebelum diproses lebih lanjut.
+
+Pada implementasi ini, saya menggunakan `TextFormField` karena ketiga informasi pendidikan yang dibutuhkan berupa teks. Namun, saya tetap menambahkan validator agar setiap kolom wajib diisi dan tidak hanya berisi spasi.
+
+Dari implementasi tersebut, saya memahami bahwa `GlobalKey<FormState>` digunakan untuk mengakses kondisi Form, `validator` menentukan aturan pemeriksaan setiap input, sedangkan `validate()` menjalankan seluruh aturan tersebut ketika pengguna menekan tombol Simpan.
+
+Melalui tugas ini, saya belajar bahwa membuat formulir di Flutter bukan hanya tentang menampilkan kolom input, tetapi juga memastikan data yang dimasukkan sudah sesuai sebelum ditampilkan kepada pengguna. Pada aplikasi ini, data Education belum disimpan ke database, melainkan ditampilkan sementara melalui `AlertDialog` setelah seluruh input berhasil divalidasi. Dengan begitu, saya bisa menerapkan materi Tutorial 09 mengenai Form, validasi input, dan dialog ringkasan secara langsung pada proyek portofolio mobile saya.
+
+### AI Disclosure
+Dalam pengerjaan Individual Assignment 8, saya menggunakan ChatGPT sebagai alat bantu belajar untuk memahami materi Flutter Navigation, Layouts, Forms, and Input Elements. ChatGPT membantu saya memahami instruksi tugas, menjelaskan fungsi beberapa widget dan method Flutter, memeriksa implementasi kode, serta membantu menyusun dokumentasi dan jawaban reflektif di README.md.
+
+Selama pengerjaan, saya menggunakan ChatGPT untuk beberapa hal, seperti memahami perbedaan `Navigator.push()`, `Navigator.pushReplacement()`, dan `Navigator.pop()`, mempelajari fungsi `Scaffold`, `AppBar`, `Drawer`, `Column`, `Padding`, `Align`, dan `SingleChildScrollView`, serta memahami penggunaan `GlobalKey<FormState>`, `validator`, dan `validate()` pada formulir.
+
+Saya juga memberikan kode `education_form.dart` dan `left_drawer.dart` yang sudah saya buat kepada ChatGPT untuk diperiksa kesesuaiannya dengan instruksi tugas. Selain itu, saya menggunakan screenshot aplikasi untuk membantu memeriksa tampilan Drawer dan halaman Education Form.
+
+Dalam proses tersebut, saya tidak hanya meminta jawaban akhir, tetapi juga meminta penjelasan mengenai alasan penggunaan setiap widget dan bagaimana kode tersebut bekerja. Beberapa contoh prompt yang saya gunakan adalah:
+
+- Bantu periksa apakah implementasi halaman formulir Education dan Drawer saya sudah sesuai dengan checklist Individual Assignment 8.
+- Jelaskan perbedaan Navigator.push(), Navigator.pushReplacement(), dan Navigator.pop() berdasarkan kode yang saya gunakan.
+- Periksa penggunaan GlobalKey<FormState>, validator, dan validate() pada formulir Education saya.
+- Bantu susun jawaban reflektif README berdasarkan kode yang sudah saya buat.
+
+Menurut saya, penggunaan AI cukup membantu dalam memahami konsep yang sebelumnya belum terlalu saya kuasai. Namun, jawaban AI tetap perlu diperiksa kembali karena tidak semua saran yang diberikan pasti sesuai dengan kondisi proyek. Karena itu, saya mencocokkan penjelasannya dengan materi Tutorial 09 dan kode yang saya gunakan, serta memastikan kembali hasil implementasinya melalui aplikasi yang dijalankan.
+
+Saya juga memahami bahwa AI dapat memberikan penjelasan yang terlalu umum atau menyarankan implementasi yang berbeda dari struktur proyek yang sudah ada. Oleh karena itu, saya tidak langsung menerapkan semua saran yang diberikan, tetapi mempertimbangkan kesesuaiannya dengan instruksi tugas dan materi yang dipelajari.
