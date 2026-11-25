@@ -15,7 +15,7 @@ class ProjectDetailScreen extends StatelessWidget {
         if (project.projectImageUrl.isNotEmpty)
           Image.network(
             project.projectImageUrl,
-                errorBuilder: (_, _, _) => const SizedBox.shrink(),
+            errorBuilder: (_, _, _) => const SizedBox.shrink(),
           ),
         Text(project.title, style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 12),
